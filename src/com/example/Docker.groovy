@@ -5,17 +5,27 @@ package com.example
 class Docker implements Serializable {
 
     def script
-
-    Docker(script) {
+    def imageName
+    Docker(script, String imageName) {
         this.script = script
+        this.imageName = imageName
     }
 
-    def buildDockerImage(String imageName) {
-        script.echo "Building docker image..."
-        script.withCredentials([script.usernamePassword(credentialsId: 'dockerhub-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
-            script.sh "docker build -t $imageName ."
+    def dockerLogin(String credentials) {
+        script.echo "Docker login..."
+        script.withCredentials([script.usernamePassword(credentialsId: credentials, passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
             script.sh "echo $script.PASSWORD | docker login -u $script.USERNAME --password-stdin"
-            script.sh "docker push $imageName"
+
         }
+    }
+
+    def dockerBuild() {
+        script.echo "Building image..."
+        script.sh "docker build -t $imageName ."
+    }
+
+    def dockerPush() {
+        script.echo "Pushing image to remote repo..."
+        script.sh "docker push $imageName"
     }
 }
