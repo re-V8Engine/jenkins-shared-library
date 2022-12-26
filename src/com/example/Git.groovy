@@ -2,11 +2,11 @@
 
 package com.example
 
-class Github implements Serializable {
+class Git implements Serializable {
 
     def script
 
-    Github(script) {
+    Git(script) {
         this.script = script
     }
 
