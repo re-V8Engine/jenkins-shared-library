@@ -10,6 +10,11 @@ class Git implements Serializable {
         this.script = script
     }
 
+    def config(String email, String name) {
+        script.sh "git config --global user.email $email"
+        script.sh "git config --global user.name $name"
+    }
+
     def setRemote(String credentials, String repoUrl) {
         script.withCredentials([script.string(credentialsId: credentials, variable: 'TOKEN')]) {
             script.sh "git remote set-url origin https://$script.TOKEN@$repoUrl"
